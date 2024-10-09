@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ENDIAN=little
+ENDIAN=big
 
 SBN_MID=0x18FA
 

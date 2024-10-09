@@ -87,6 +87,7 @@ static bool VerifyMsgLen(CFE_MSG_Message_t *MsgPtr, uint16 ExpectedLen, const ch
             EVSSendErr(SBN_CMD_EID, "unable to get FcnCode (Name=%s)", MsgName);
             return false;
         }
+        EVSSendInfo(SBN_CMD_EID, "Function code: %d", FcnCode);
 
         if (FcnCode == SBN_HK_CC)
         {

@@ -274,7 +274,7 @@ static SBN_Status_t Deinit(CFE_EVS_EventID_t BaseEID)
     return SBN_SUCCESS;
 }
 
-static SBN_Status_t Init(int Version, CFE_EVS_EventID_t BaseEID)
+static SBN_Status_t SBN_Remap_LibInit(int Version, CFE_EVS_EventID_t BaseEID)
 {
     CFE_ES_TaskInfo_t TaskInfo;
     OS_Status_t OS_Status;
@@ -321,4 +321,4 @@ static SBN_Status_t Init(int Version, CFE_EVS_EventID_t BaseEID)
     return SBN_SUCCESS;
 } /* end Init() */
 
-SBN_FilterInterface_t SBN_F_Remap = {Init, Remap, Remap, Remap_MID};
+SBN_FilterInterface_t SBN_F_Remap = {SBN_Remap_LibInit, Remap, Remap, Remap_MID};

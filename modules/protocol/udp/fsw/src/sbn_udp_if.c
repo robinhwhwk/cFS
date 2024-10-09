@@ -13,7 +13,7 @@ CFE_EVS_EventID_t SBN_UDP_FIRST_EID;
 
 static SBN_ProtocolOutlet_t SBN;
 
-static SBN_Status_t Init(int Version, CFE_EVS_EventID_t BaseEID, SBN_ProtocolOutlet_t *Outlet)
+static SBN_Status_t SBN_UDP_LibInit(int Version, CFE_EVS_EventID_t BaseEID, SBN_ProtocolOutlet_t *Outlet)
 {
     SBN_UDP_FIRST_EID = BaseEID;
 
@@ -336,5 +336,5 @@ static SBN_Status_t UnloadNet(SBN_NetInterface_t *Net)
     return Status;
 } /* end UnloadNet() */
 
-SBN_IfOps_t SBN_UDP_Ops = {Init, InitNet, InitPeer, LoadNet,   LoadPeer,  PollPeer,
+SBN_IfOps_t SBN_UDP_Ops = {SBN_UDP_LibInit, InitNet, InitPeer, LoadNet,   LoadPeer,  PollPeer,
                            Send, NULL,    Recv,     UnloadNet, UnloadPeer};

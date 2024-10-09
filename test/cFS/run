@@ -34,7 +34,7 @@ printf '127.0.0.1       ' | ./cisend --mid=$TO_MID --cc=$TO_START_CC
 sleep 1
 
 echo commanding Fib
-FIB_MID=0x1882
+FIB_MID=0x1a82
 printf '' | ./cisend --mid=$FIB_MID --cc=0
 sleep 1
 printf '' | ./cisend --mid=$FIB_MID --cc=0

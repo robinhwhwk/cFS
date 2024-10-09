@@ -30,6 +30,7 @@ void FIB_AppMain(void)
         CFE_EVS_SendEvent(FIB_EID, CFE_EVS_EventType_ERROR, "error subscribing to command");
         return;
     }
+    CFE_EVS_SendEvent(FIB_EID, "Fib subscribed to command pipe FIB_CMD_MID 0x%04X", FIB_CMD_MID);
 
     CFE_EVS_SendEvent(FIB_EID, CFE_EVS_EventType_INFORMATION, "Fib App Initialized.");
 

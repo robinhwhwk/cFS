@@ -77,7 +77,7 @@ EOF
 
 cat > "${CFS_ROOT}/apps/to_lab/fsw/tables/to_lab_sub.c" <<- "EOF"
 	#include "cfe_tbl_filedef.h"
-	#include "to_lab_sub_table.h"
+	// #include "to_lab_sub_table.h"
 	#include "to_lab_msgids.h"
 	#include "fib_app_msgids.h"
 	

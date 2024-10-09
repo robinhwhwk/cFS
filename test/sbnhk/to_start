@@ -10,8 +10,8 @@ TO_MID=0x1880
 # ./cisend --mid=$TO_MID --cc=$TO_NOOP_CC --ccendian=little < /dev/null
 
 # tell TO to send SBN HK
-printf '\xFC\x08\x00\x00\x00\x00\x10' | \
+echo '\xFC\x08\x00\x00\x00\x00\x10' | \
     ./cisend --mid=$TO_MID --cc=$TO_ADD_MID_CC --ccendian=little
 
-printf '127.0.0.1       ' | \
+echo '127.0.0.1       ' | \
     ./cisend --mid=$TO_MID --cc=$TO_START_CC --ccendian=little
