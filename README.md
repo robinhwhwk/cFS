@@ -15,6 +15,10 @@ Fork of the cFS repository from NASA, testing communication between different cF
     - Server receives message from client, sends telemetry to client.
     - Client receives telemetry from server, increments the counter. -> Timestamp recorded
     - Get the difference in timestamps for latency.
+- Send commands from ground using test/cFS/cisend
+```bash
+  printf '' | ./cisend --mid=0x1b82 --cc=0
+  ```
  
 ### Software Bus Network
 #### Without Containers
