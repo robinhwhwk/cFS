@@ -1,0 +1,6 @@
+CFE_LIB, cfe_assert,  CFE_Assert_LibInit, ASSERT_LIB,    0,   0,     0x0, 0;
+CFE_APP, fib_app,         FIB_AppMain,     FIB_APP,   60,   16384, 0x0, 0;
+!
+CFE_LIB, sbn_udp,     SBN_UDP_LibInit,           SBN_UDP_LIB,       0,   0, 0x0, 0;
+CFE_LIB, sbn_f_remap,     SBN_Remap_LibInit,       SBN_REMAP_LIB,       0,   0, 0x0, 0;
+CFE_APP, sbn,         SBN_AppMain,    SBN,      60,   16384, 0x0, 0;

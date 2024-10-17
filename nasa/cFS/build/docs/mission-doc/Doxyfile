@@ -1,0 +1,51 @@
+#---------------------------------------------------------------------------
+# Sample doxygen setup for generating mission documentation
+#---------------------------------------------------------------------------
+
+# Allow overrides
+@INCLUDE_PATH          = /home/robin/src/sbn-instance-1/nasa/cFS
+
+# Common configuration and default settings
+@INCLUDE               = /home/robin/src/sbn-instance-1/nasa/cFS/build/docs/cfe-common.doxyfile
+
+# Example mission doc design setup
+PROJECT_NAME           = "SampleMission"
+PROJECT_BRIEF          = "Core Flight System project built using \"sample\" configuration"
+OUTPUT_DIRECTORY       = /home/robin/src/sbn-instance-1/nasa/cFS/build/docs/mission-doc
+WARN_LOGFILE           = mission-doc-warnings.log
+
+# Include mission defs directory
+INPUT                 += /home/robin/src/sbn-instance-1/nasa/cFS/sample_defs
+STRIP_FROM_PATH       += /home/robin/src/sbn-instance-1/nasa/cFS/sample_defs
+
+# The user content doxyfile contains paths to the mission-specific applications
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/core_api
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/core_private
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/apps/ci_lab
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/apps/client
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/cfe_assert
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/apps/sbn
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/apps/sbn_udp
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/apps/sbn_tcp
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/apps/sch_lab
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/apps/sbn_f_remap
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/es
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/evs
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/fs
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/sb
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/tbl
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/time
+@INCLUDE = /home/robin/src/sbn-instance-1/nasa/cFS/build/docs/osal-detaildesign.doxyfile
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/psp
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/msg
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/sbr
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/resourceid
+INPUT += /home/robin/src/sbn-instance-1/nasa/cFS/cfe/modules/config
+
+@INCLUDE = /home/robin/src/sbn-instance-1/nasa/cFS/build/docs/tgtsystem-content-native_default_cpu1.doxyfile
+
+
+# Exclude coverage tests, stubs and associated framework from the documentation
+EXCLUDE_PATTERNS       += "*/ut-stubs/*"
+EXCLUDE_PATTERNS       += "*/ut-coverage/*"
+EXCLUDE_PATTERNS       += "*/unit-test*/*"

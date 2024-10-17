@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g -shared  -o sbn_tcp.so CMakeFiles/sbn_tcp.dir/fsw/src/sbn_tcp_if.c.o 

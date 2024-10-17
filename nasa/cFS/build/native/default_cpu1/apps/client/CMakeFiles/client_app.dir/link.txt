@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g -shared  -o client_app.so CMakeFiles/client_app.dir/fsw/src/client_app.c.o 
