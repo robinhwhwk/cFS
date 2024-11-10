@@ -795,7 +795,9 @@ static SBN_Status_t CheckPeerPipes(void)
                     continue;
                 } /* end if */
 
+                // EVSSendInfo(SBN_SUB_EID, "SBN CheckPeerPipes Sending Message");
                 SBN_SendNetMsg(SBN_APP_MSG, MsgSz, MsgPtr, Peer);
+                // EVSSendInfo(SBN_SUB_EID, "SBN CheckPeerPipes Sent Message");
             } /* end for */
         }     /* end for */
 
@@ -940,6 +942,8 @@ static SBN_Status_t WaitForWakeup(int32 iTimeOut)
     SBN_Status_t       SBN_Status = SBN_SUCCESS;
     CFE_MSG_Message_t *MsgPtr    = 0;
 
+    // EVSSendInfo(SBN_SB_EID, "SBN wakeup called");
+
     /* Wait for WakeUp messages from scheduler */
     CFE_Status = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&MsgPtr, SBN.CmdPipe, iTimeOut);
 
@@ -947,13 +951,17 @@ static SBN_Status_t WaitForWakeup(int32 iTimeOut)
     {
         case CFE_SB_NO_MESSAGE:
         case CFE_SB_TIME_OUT:
+            // EVSSendInfo(SBN_SB_EID, "SBN wakeup - timeout");
             break;
         case CFE_SUCCESS:
+            // EVSSendInfo(SBN_SB_EID, "SBN wakeup - success");
             SBN_HandleCommand(MsgPtr);
             break;
         default:
             return SBN_ERROR;
     } /* end switch */
+
+    // CFE_EVS_SendEvent(SBN_SB_EID, CFE_EVS_EventType_INFORMATION, "SBN wakeup received buffer");
 
     /* For sbn, we still want to perform cyclic processing
     ** if the WaitForWakeup time out
@@ -962,6 +970,7 @@ static SBN_Status_t WaitForWakeup(int32 iTimeOut)
     CFE_ES_PerfLogEntry(SBN_PERF_RECV_ID);
 
     SBN_RecvNetMsgs();
+    // CFE_EVS_SendEvent(SBN_SB_EID, CFE_EVS_EventType_INFORMATION, "SBN wakeup received net messages");
 
     SBN_Status = SBN_CheckSubscriptionPipe();
     switch(SBN_Status) {
@@ -974,10 +983,15 @@ static SBN_Status_t WaitForWakeup(int32 iTimeOut)
         /* no error */
         break;
     };
+    // CFE_EVS_SendEvent(SBN_SB_EID, CFE_EVS_EventType_INFORMATION, "SBN wakeup checked subscription pipe");
 
     CheckPeerPipes();
 
+    // CFE_EVS_SendEvent(SBN_SB_EID, CFE_EVS_EventType_INFORMATION, "SBN wakeup checked peer pipes");
+
     PeerPoll();
+
+    // CFE_EVS_SendEvent(SBN_SB_EID, CFE_EVS_EventType_INFORMATION, "SBN wakeup peers polled");
 
     CFE_ES_PerfLogExit(SBN_PERF_RECV_ID);
 
@@ -1400,12 +1414,13 @@ static SBN_Status_t SetupSubPipe(void)
 static SBN_Status_t Init(void)
 {
     static const char FAIL_PREFIX[] = "ERROR: could not initialize SBN:";
-
+    EVSSendInfo(SBN_INIT_EID, "SBN Init() called");
     /* Load the configuration from the table */
     if(LoadConf() != SBN_SUCCESS)
     {
         return SBN_ERROR;
     }
+    EVSSendInfo(SBN_INIT_EID, "LoadConf success");
 
     if (InitInterfaces() == SBN_ERROR)
     {
@@ -1413,11 +1428,15 @@ static SBN_Status_t Init(void)
         return SBN_ERROR;
     } /* end if */
 
+    EVSSendInfo(SBN_INIT_EID, "InitInterfaces success");
+
     if(SetupSubPipe() != SBN_SUCCESS)
     {
         EVSSendErr(SBN_INIT_EID, "%s unable to set up subscription pipe", FAIL_PREFIX);
         return SBN_ERROR;
     }
+
+    EVSSendInfo(SBN_INIT_EID, "SetupSubPipe success");
 
     const char *bit_order =
 #ifdef SOFTWARE_BIG_BIT_ORDER
@@ -1534,6 +1553,9 @@ void SBN_AppMain(void)
         return;
     } /* end if */
 
+    /*
+        Subscribe to ground commands
+    */
     Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(SBN_CMD_MID), SBN.CmdPipe);
     if (Status == CFE_SUCCESS)
     {
@@ -1557,7 +1579,9 @@ void SBN_AppMain(void)
 
     if(Init() != SBN_SUCCESS) {
         RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        EVSSendInfo(SBN_INIT_EID, "Init failed");
     }
+    EVSSendInfo(SBN_INIT_EID, "SBN Init successful");
 
     /* Loop Forever */
     while (CFE_ES_RunLoop(&RunStatus))

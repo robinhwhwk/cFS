@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "sbn_msgids.h": "c",
+        "errno.h": "c"
+    }
+}

@@ -1,9 +1,20 @@
 #include "cfe_platform_cfg.h"
 #include "client_app_events.h"
 #include "client_app.h"
+#include <sys/time.h>
 
 #define PACKET_TYPE_MASK  0x1000  // Mask for bit 12
 #define PACKET_TYPE_SHIFT 12      // Bit position of the packet type (TLM=0, CMD=1)
+
+/**
+ * Returns the current time in microseconds.
+ */
+long getMicrotime(void){
+	struct timeval currentTime;
+	gettimeofday(&currentTime, NULL);
+	return currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
+}
+
 
 CLIENT_AppData_t CLIENT_AppData;
 
@@ -11,6 +22,12 @@ void CLIENT_AppMain(void)
 {
     int32     status;
     CLIENT_tlm_t tlm;
+
+    /*
+     ** For calculating latency from last packet
+    */
+    long lastPacketTime;
+    long latency;
 
     CLIENT_AppData.counter = 0;
     /*
@@ -67,6 +84,7 @@ void CLIENT_AppMain(void)
         CFE_SB_Buffer_t *MsgBuf;
 
         status = CFE_SB_ReceiveBuffer(&MsgBuf, CLIENT_AppData.Pipe, CFE_SB_PEND_FOREVER);
+        
 
         if (status == CFE_SUCCESS)
         {
@@ -78,7 +96,9 @@ void CLIENT_AppMain(void)
             uint16_t stream_id = (MsgBuf->Msg.CCSDS.Pri.StreamId [0] << 8) | MsgBuf->Msg.CCSDS.Pri.StreamId[1];
             uint8_t packet_type = (stream_id & PACKET_TYPE_MASK) >> PACKET_TYPE_SHIFT;
 
-            CFE_EVS_SendEvent(CLIENT_EID, CFE_EVS_EventType_INFORMATION, "Packet type: %d, Client counter: %d", packet_type, tlm.counter);
+            latency = getMicrotime() - lastPacketTime;
+            lastPacketTime = getMicrotime();
+            CFE_EVS_SendEvent(CLIENT_EID, CFE_EVS_EventType_INFORMATION, "Client counter: %d, Latency: %lu", tlm.counter, latency);
 
             if (packet_type == 1) {
                 CFE_EVS_SendEvent(CLIENT_EID, CFE_EVS_EventType_INFORMATION, "Sending telemetry data onto SB");

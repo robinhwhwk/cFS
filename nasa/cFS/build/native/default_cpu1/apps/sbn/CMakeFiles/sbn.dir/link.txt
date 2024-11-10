@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC -g -shared  -o sbn.so CMakeFiles/sbn.dir/fsw/src/sbn_app.c.o CMakeFiles/sbn.dir/fsw/src/sbn_cmds.c.o CMakeFiles/sbn.dir/fsw/src/sbn_pack.c.o CMakeFiles/sbn.dir/fsw/src/sbn_subs.c.o 

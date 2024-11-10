@@ -35,6 +35,8 @@
 #include "sample_app_msgids.h"
 #endif
 
+#include "/home/robin/src/sbn-instance-1/nasa/cFS/apps/sbn/fsw/platform_inc/sbn_msgids.h"
+
 #ifdef HAVE_HS
 #include "hs_msgids.h"
 #endif
@@ -63,15 +65,17 @@
 **  2. You can have commented out entries or entries with a packet rate of 0
 **  3. If the table grows too big, increase SCH_LAB_MAX_SCHEDULE_ENTRIES
 */
+#define M 1
 
 SCH_LAB_ScheduleTable_t SCH_LAB_ScheduleTable = {
-    .TickRate = 100,
+    .TickRate = 100 * M,
     .Config   = {
-        {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_SEND_HK_MID), 100, 0}, /* Example of a 1hz packet */
-        {CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_SEND_HK_MID), 50, 0},
-        {CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_SEND_HK_MID), 98, 0},
-        {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_SEND_HK_MID), 97, 0},
-        {CFE_SB_MSGID_WRAP_VALUE(CFE_EVS_SEND_HK_MID), 96, 0},
+        {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_SEND_HK_MID), 100 * M, 0}, /* Example of a 1hz packet */
+        {CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_SEND_HK_MID), 50 * M, 0},
+        {CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_SEND_HK_MID), 98 * M, 0},
+        {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_SEND_HK_MID), 97 * M, 0},
+        {CFE_SB_MSGID_WRAP_VALUE(CFE_EVS_SEND_HK_MID), 96 * M, 0},
+        {CFE_SB_MSGID_WRAP_VALUE(SBN_CMD_MID), 1, 0},
 
 /* Example of including additional open source apps  */
 #ifdef HAVE_CI_LAB

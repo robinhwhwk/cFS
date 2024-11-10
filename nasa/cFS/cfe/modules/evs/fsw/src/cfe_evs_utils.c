@@ -292,7 +292,7 @@ bool EVS_CheckAndIncrementSquelchTokens(EVS_AppData_t *AppDataPtr)
     char      AppName[OS_MAX_API_NAME];
 
     /* Set maximum token credits to burst size */
-    const int32 UPPER_THRESHOLD = CFE_EVS_Global.EVS_EventBurstMax * 1000;
+    const int32 UPPER_THRESHOLD = CFE_EVS_Global.EVS_EventBurstMax * 100000;
     /*
      * Set lower threshold to stop decrementing
      * Make this -CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST to add some hysteresis
