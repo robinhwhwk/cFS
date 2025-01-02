@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "sbn_msgids.h": "c",
-        "errno.h": "c"
+        "errno.h": "c",
+        "file_transfer_client_app.h": "c"
     }
 }

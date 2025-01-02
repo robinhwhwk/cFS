@@ -54,13 +54,13 @@
  * subscribed to. The pipe should be deep enough to handle all messages that
  * will queue between wakeups.
  */
-#define SBN_PEER_PIPE_DEPTH 32
+#define SBN_PEER_PIPE_DEPTH 1000
 
 /**
  * @brief The maximum number of messages that will be queued for a particular
  * message ID for a particular peer.
  */
-#define SBN_DEFAULT_MSG_LIM 8
+#define SBN_DEFAULT_MSG_LIM 1000
 
 /**
  * @brief The maximum number of subscription messages that will be queued
