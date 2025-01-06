@@ -14,11 +14,13 @@ SBN_ConfTbl_t SBN_ConfTbl = {
     .Peers = {
         // Use for containers
         // { .ProcessorID = 1, .SpacecraftID = 0x42, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "172.18.0.2:2234", .TaskFlags = 3 },
-        // { .ProcessorID = 1, .SpacecraftID = 0x43, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "172.18.0.3:2235", .TaskFlags = 3 },
-         { .ProcessorID = 1, .SpacecraftID = 0x42, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "127.0.0.1:2234", .TaskFlags = 3 },
-        { .ProcessorID = 1, .SpacecraftID = 0x43, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "127.0.0.1:2235", .TaskFlags = 3 },
+        // { .ProcessorID = 1, .SpacecraftID = 0x43, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "172.18.0.3:2234", .TaskFlags = 3 },
+        // { .ProcessorID = 1, .SpacecraftID = 0x44, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "172.18.0.4:2234", .TaskFlags = 3 },
+        { .ProcessorID = 1, .SpacecraftID = 0x42, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "127.0.0.1:2234", .TaskFlags = 3 },
+        { .ProcessorID = 2, .SpacecraftID = 0x42, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "127.0.0.1:2235", .TaskFlags = 3 },
+        { .ProcessorID = 3, .SpacecraftID = 0x42, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "127.0.0.1:2236", .TaskFlags = 3 },
     },
-    .PeerCnt = 2
+    .PeerCnt = 3
 };
 
 CFE_TBL_FILEDEF(SBN_ConfTbl, SBN.SBN_ConfTbl, SBN Configuration Table, sbn_conf_tbl.tbl)

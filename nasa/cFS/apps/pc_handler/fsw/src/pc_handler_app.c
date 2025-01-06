@@ -3,13 +3,10 @@
 #include "pc_handler_app.h"
 
 PC_HANDLER_AppData_t PC_HANDLER_AppData;
-PC_HANDLER_response_t response;
 
 void PC_HANDLER_AppMain(void)
 {
     int32     status;
-
-    CFE_MSG_Init((CFE_MSG_Message_t *)&response, CFE_SB_ValueToMsgId(PC_HANDLER_RESPONSE_MID), sizeof(response));
 
     CFE_EVS_Register(NULL, 0, CFE_EVS_NO_FILTER);
 
@@ -34,11 +31,20 @@ void PC_HANDLER_AppMain(void)
      /*
         ** Subscribe to client request command packets
     */
+   
     if ((status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CLIENT_REQUEST_MID), PC_HANDLER_AppData.Pipe)) != CFE_SUCCESS)
     {
-        CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_ERROR, "error subscribing to command");
+        CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_ERROR, "error subscribing to request");
         return;
     }
+    CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION, "PC_HANDLER subscribed to command pipe PC_HANDLER_CMD_MID 0x%04X", CLIENT_REQUEST_MID);
+
+    if ((status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(USER_REQUEST_MID), PC_HANDLER_AppData.Pipe)) != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_ERROR, "error subscribing to request");
+        return;
+    }
+    CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION, "PC_HANDLER subscribed to command pipe PC_HANDLER_CMD_MID 0x%04X", USER_REQUEST_MID);
     
     CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION, "PC_HANDLER App Initialized.");
 
@@ -52,8 +58,7 @@ void PC_HANDLER_AppMain(void)
 
         if (status == CFE_SUCCESS)
         {
-            CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION, "PC Handler received message");
-            CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
+            // CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION, "PC Handler received message");
             FILE_TRANSFER_SERVER_ProcessPacket(MsgBuf);
         }
         else
@@ -77,6 +82,9 @@ void FILE_TRANSFER_SERVER_ProcessPacket(CFE_SB_Buffer_t *SBBufPtr)
         case CLIENT_REQUEST_MID:
             FILE_TRANSFER_SERVER_ProcessRequestFileCmd(SBBufPtr);
             break;
+        case USER_REQUEST_MID:
+            FILE_TRANSFER_SERVER_ProcessRequestFileCmd(SBBufPtr);
+            break;
 
         default:
             /* Unknown or unexpected message ID */
@@ -92,11 +100,11 @@ void FILE_TRANSFER_SERVER_ProcessRequestFileCmd(CFE_SB_Buffer_t *SBBufPtr)
     const CPU_TEMP_request_t *CmdPtr = (const CPU_TEMP_request_t *) SBBufPtr;
 
     /* For demonstration, just log an event: which file is requested? */
-    CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION,
-                      "FileTransferServer: Received request for file '%s'", CmdPtr->device_path);
+    // CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION,
+    //                   "FileTransferServer: Received request for file '%s'", CmdPtr->device_path);
 
     /* Send the requested file to the requesting client(s) */
-    FILE_TRANSFER_SERVER_SendFile(CmdPtr->device_path);
+    FILE_TRANSFER_SERVER_SendFile(CmdPtr->device_path, CmdPtr->sender_mid, CmdPtr->last);
 } /* End FILE_TRANSFER_SERVER_ProcessRequestFileCmd */
 
 
@@ -110,15 +118,14 @@ void FILE_TRANSFER_SERVER_ProcessRequestFileCmd(CFE_SB_Buffer_t *SBBufPtr)
 **   subscription).
 **
 *******************************************************************************/
-void FILE_TRANSFER_SERVER_SendFile(const char *filename)
+void FILE_TRANSFER_SERVER_SendFile(const char *filename, int32 message_id, int last)
 {
-    // PC_HANDLER_response_t response;
-
+    PC_HANDLER_response_t response;
     /* Initialize the TLM message header for our chunk message */
-    // CFE_MSG_Init((CFE_MSG_Message_t *)&response, CFE_SB_ValueToMsgId(PC_HANDLER_RESPONSE_MID), sizeof(response));
-    // CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
+    CFE_MSG_Init((CFE_MSG_Message_t *)&response, CFE_SB_ValueToMsgId(message_id), sizeof(response));
 
     /* Attempt to open the file */
+    printf("File request for file %s from MID 0x%04x\n", filename, message_id);
     FILE *fp = fopen(filename, "rb");
     if (fp == NULL)
     {
@@ -141,9 +148,14 @@ void FILE_TRANSFER_SERVER_SendFile(const char *filename)
     if (bytesRead > 0)
     {
         /* Publish the chunk to the software bus */
-        response.Flags    = FILE_TRANSFER_FLAG_EOF;
-        int32 status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
-        printf("sending file to client. Status: %d\n", status);
+        if (last == 1) {
+            response.Flags    = FILE_TRANSFER_FLAG_EOF;
+            CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION,
+                      "FileTransferServer: Last Packet for '%s'.", filename);
+        }
+        
+        int status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
+        printf("Sending response to MID 0x%4X\n", message_id);
         if (status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_ERROR,
@@ -151,8 +163,6 @@ void FILE_TRANSFER_SERVER_SendFile(const char *filename)
             fclose(fp);
             return;
         }
-    } else {
-        printf("here\n");
     }
 
     // } while (bytesRead == FILE_TRANSFER_MAX_CHUNK_SIZE);
@@ -162,13 +172,8 @@ void FILE_TRANSFER_SERVER_SendFile(const char *filename)
     // response.ChunkSize = 0;
     memset(response.Data, 0, sizeof(response.Data));
 
-    // CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
-
     /* Close the file */
     fclose(fp);
-
-    CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION,
-                      "FileTransferServer: Completed sending file '%s'.", filename);
 } /* End FILE_TRANSFER_SERVER_SendFile */
 
 

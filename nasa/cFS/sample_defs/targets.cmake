@@ -99,16 +99,21 @@ list(APPEND MISSION_GLOBAL_APPLIST sbn sbn_udp sbn_tcp sbn_f_remap)
 SET(FT_INSTALL_SUBDIR "host/functional-test")
 
 # Each target board can have its own HW arch selection and set of included apps
-SET(MISSION_CPUNAMES cpu1)
+SET(MISSION_CPUNAMES cpu1 cpu2 cpu3)
 
 SET(cpu1_PROCESSORID 1)
-SET(cpu1_APPLIST ci_lab client cpu_temp file_transfer_client)
+SET(cpu1_APPLIST ci_lab cpu_temp)
 SET(cpu1_FILELIST cfe_es_startup.scr)
 SET(cpu1_SYSTEM i686-linux-gnu)
 
-# SET(cpu2_PROCESSORID 2)
-# SET(cpu2_APPLIST server)
-# SET(cpu2_FILELIST cfe_es_startup.scr)
-# SET(cpu2_SYSTEM i686-linux-gnu)
+SET(cpu2_PROCESSORID 2)
+SET(cpu2_APPLIST pc_handler)
+SET(cpu2_FILELIST cfe_es_startup.scr)
+SET(cpu2_SYSTEM i686-linux-gnu)
+
+SET(cpu3_PROCESSORID 3)
+SET(cpu3_APPLIST ci_lab user_app)
+SET(cpu3_FILELIST cfe_es_startup.scr)
+SET(cpu3_SYSTEM i686-linux-gnu)
 
 

@@ -1,7 +1,8 @@
-CFE_APP, server_app,      SERVER_AppMain,     SERVER_APP,   60,   16384, 0x0, 0; 
+CFE_LIB, cfe_assert,  CFE_Assert_LibInit, ASSERT_LIB,    0,   0,     0x0, 0;
 CFE_LIB, sbn_udp,     SBN_UDP_LibInit,           SBN_UDP_LIB,       0,   0, 0x0, 0;
 CFE_LIB, sbn_f_remap,     SBN_Remap_LibInit,       SBN_REMAP_LIB,       0,   0, 0x0, 0;
 CFE_APP, sbn,         SBN_AppMain,    SBN,      60,   16384, 0x0, 0;
+CFE_APP, pc_handler_app,      PC_HANDLER_AppMain,     PC_HANDLER_APP,   61,   16384, 0x0, 0; 
 !
 ! Startup script fields:
 ! 1. Object Type      -- CFE_APP for an Application, or CFE_LIB for a library.

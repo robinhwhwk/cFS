@@ -1,5 +1,5 @@
-#ifndef _CPU_TEMP_app_msg_h_
-#define _CPU_TEMP_app_msg_h_
+#ifndef _USER_APP_msg_h_
+#define _USER_APP_msg_h_
 
 /*
  * Telemetry (chunk) message for sending file data from the server to the client
@@ -11,9 +11,10 @@ typedef struct
     CFE_MSG_CommandHeader_t MsgHeader; /* cFS standard command header */
     uint8 opcode; /* READ = 0, WRITE = 1*/
     char device_path[64]; /* filename to read/write to */
-    int32 sender_mid; /* the message id that this app is subscribed to for responses */
+    int32 sender_mid; /* the mid that the PC should attach on the response */
     int last; /* 0 if not last request, 1 if it is */
-} CPU_TEMP_request_t;
+} USER_request_t;
+
 
 typedef struct
 {

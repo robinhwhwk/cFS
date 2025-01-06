@@ -8,8 +8,8 @@ SBN_RemapTbl_t SBN_RemapTbl = {
     //     {
     //         .ProcessorID = 1,
     //         .SpacecraftID = 0x43,
-    //         .FromMID = {0x1d84},
-    //         .ToMID = {0x1d84}
+    //         .FromMID = {0x1862},
+    //         .ToMID = {0x1862}
     //     }
     // }
 };

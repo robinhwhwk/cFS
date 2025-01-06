@@ -3,14 +3,14 @@
 
 #define FILE_TRANSFER_MAX_CHUNK_SIZE (1024) /* Example chunk size */
 
+
 typedef struct
 {
     CFE_MSG_CommandHeader_t MsgHeader; /* cFS standard command header */
     uint8 opcode; /* READ = 0, WRITE = 1*/
     char device_path[64]; /* filename to read/write to */
-    void* buffer; /* buffer to store result*/
-    size_t nbytes; /* number of bytes to read into buffer*/
-    int32 offset;
+    int32 sender_mid; /* the message id to send the response with */
+    int last; /* 0 if not last request, 1 if it is */
 } CPU_TEMP_request_t;
 
 typedef struct

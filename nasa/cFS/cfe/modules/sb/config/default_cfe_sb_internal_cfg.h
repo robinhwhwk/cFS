@@ -98,7 +98,7 @@
 **       This parameter has a lower limit of 4 and an upper limit of 65535.
 **
 */
-#define CFE_PLATFORM_SB_DEFAULT_MSG_LIMIT 4
+#define CFE_PLATFORM_SB_DEFAULT_MSG_LIMIT 10000
 
 /**
 **  \cfesbcfg Size of the SB buffer memory pool
@@ -120,7 +120,7 @@
 **       This parameter has a lower limit of 512 and an upper limit of UINT_MAX (4 Gigabytes).
 **
 */
-#define CFE_PLATFORM_SB_BUF_MEMORY_BYTES 524288
+#define CFE_PLATFORM_SB_BUF_MEMORY_BYTES 5242880
 
 /**
 **  \cfesbcfg Highest Valid Message Id

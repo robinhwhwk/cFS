@@ -20,9 +20,10 @@ typedef struct
     CFE_SB_PipeId_t Pipe;
 } PC_HANDLER_AppData_t;
 
+
 void PC_HANDLER_AppMain(void);
 void  FILE_TRANSFER_SERVER_ProcessPacket(CFE_SB_Buffer_t *SBBufPtr);
 void  FILE_TRANSFER_SERVER_ProcessRequestFileCmd(CFE_SB_Buffer_t *SBBufPtr);
-void  FILE_TRANSFER_SERVER_SendFile(const char *filename);
+void  FILE_TRANSFER_SERVER_SendFile(const char *filename, int message_id, int last);
 
 #endif
