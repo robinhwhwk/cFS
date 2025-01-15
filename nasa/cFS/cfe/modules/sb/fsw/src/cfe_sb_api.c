@@ -130,7 +130,8 @@ CFE_Status_t CFE_SB_CreatePipe(CFE_SB_PipeId_t *PipeIdPtr, uint16 Depth, const c
         Status         = CFE_SB_BAD_ARGUMENT;
     }
     else
-    {
+    {   
+        printf("PipeName: %s, depth: %d\n", PipeName, Depth);
         /* Get an available Pipe Descriptor which must be done while locked */
         CFE_SB_LockSharedData(__func__, __LINE__);
 

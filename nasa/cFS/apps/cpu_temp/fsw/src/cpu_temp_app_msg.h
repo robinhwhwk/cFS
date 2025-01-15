@@ -11,8 +11,8 @@ typedef struct
     CFE_MSG_CommandHeader_t MsgHeader; /* cFS standard command header */
     uint8 opcode; /* READ = 0, WRITE = 1*/
     char device_path[64]; /* filename to read/write to */
-    int32 sender_mid; /* the message id that this app is subscribed to for responses */
-    int last; /* 0 if not last request, 1 if it is */
+    uint32 sender_mid; /* the message id that this app is subscribed to for responses */
+    uint32 packetSize;
 } CPU_TEMP_request_t;
 
 typedef struct

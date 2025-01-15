@@ -124,6 +124,7 @@ int32 OS_QueueCreate_Impl(const OS_object_token_t *token, uint32 flags)
             OS_DEBUG("parameter located in /proc/sys/fs/mqueue/msg_max\n");
             OS_DEBUG("on your Linux file system and raise it if you\n");
             OS_DEBUG(" need to or run as root\n");
+            printf("OS_QueueCreate Error. errno = %d (%s)\n", errno, strerror(errno));
         }
         return_code = OS_ERROR;
     }

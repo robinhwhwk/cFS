@@ -1685,6 +1685,10 @@ SBN_Status_t SBN_ProcessNetMsg(SBN_NetInterface_t *Net, SBN_MsgType_t MsgType, C
 
             CFE_Status = CFE_SB_TransmitMsg(Msg, false);
 
+            // while (CFE_Status != CFE_SUCCESS) {
+            //     CFE_Status = CFE_SB_TransmitMsg(Msg, false);
+            // }
+
             if (CFE_Status != CFE_SUCCESS)
             {
                 EVSSendErr(SBN_SB_EID, "%s CFE_SB_PassMsg error (Status=%d MsgType=0x%x)", FAIL_PREFIX, (int)CFE_Status, MsgType);

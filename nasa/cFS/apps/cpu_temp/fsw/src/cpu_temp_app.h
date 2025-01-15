@@ -17,6 +17,7 @@ typedef struct
 {
     uint32 RunStatus;
     uint32 counter;
+    uint32 chunkSize;
 
     CFE_SB_PipeId_t Pipe;
 } CPU_TEMP_AppData_t;

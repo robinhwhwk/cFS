@@ -4,6 +4,7 @@
 SBN_ConfTbl_t SBN_ConfTbl = {
     .ProtocolModules = {
         { .Name = "UDP", .LibFileName = "/cf/sbn_udp.so", .LibSymbol = "SBN_UDP_Ops", .BaseEID = 0x0100 }
+        // { .Name = "TCP", .LibFileName = "/cf/sbn_tcp.so", .LibSymbol = "SBN_TCP_Ops", .BaseEID = 0x0100 }
     },
     .ProtocolCnt = 1,
     .FilterModules = {

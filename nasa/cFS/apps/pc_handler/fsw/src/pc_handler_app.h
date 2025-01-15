@@ -16,6 +16,7 @@ typedef struct
 {
     uint32 RunStatus;
     uint32 counter;
+    uint32 chunkSize;
 
     CFE_SB_PipeId_t Pipe;
 } PC_HANDLER_AppData_t;
@@ -24,6 +25,6 @@ typedef struct
 void PC_HANDLER_AppMain(void);
 void  FILE_TRANSFER_SERVER_ProcessPacket(CFE_SB_Buffer_t *SBBufPtr);
 void  FILE_TRANSFER_SERVER_ProcessRequestFileCmd(CFE_SB_Buffer_t *SBBufPtr);
-void  FILE_TRANSFER_SERVER_SendFile(const char *filename, int message_id, int last);
+void  FILE_TRANSFER_SERVER_SendFile(const char *filename, int message_id);
 
 #endif

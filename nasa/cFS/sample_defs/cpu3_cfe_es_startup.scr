@@ -1,7 +1,7 @@
-CFE_APP, ci_lab,      CI_LAB_AppMain,     CI_LAB_APP,   60,   16384, 0x0, 0;
+CFE_APP, ci_lab,      CI_LAB_AppMain,     CI_LAB_APP,   58,   16384, 0x0, 0;
 CFE_LIB, sbn_udp,     SBN_UDP_LibInit,           SBN_UDP_LIB,       0,   0, 0x0, 0;
 CFE_LIB, sbn_f_remap,     SBN_Remap_LibInit,       SBN_REMAP_LIB,       0,   0, 0x0, 0;
-CFE_APP, sbn,         SBN_AppMain,    SBN,      60,   16384, 0x0, 0;
+CFE_APP, sbn,         SBN_AppMain,    SBN,      59,   16384, 0x0, 0;
 CFE_APP, user_app,      USER_AppMain,     USER_APP,   60,   16384, 0x0, 0; 
 
 !

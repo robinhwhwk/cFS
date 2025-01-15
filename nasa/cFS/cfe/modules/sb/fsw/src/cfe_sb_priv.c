@@ -1127,6 +1127,7 @@ bool CFE_SB_TransmitTxn_PipeHandler(CFE_SB_MessageTxn_State_t *TxnPtr, CFE_SB_Pi
         if (ContextPtr->OsStatus == OS_QUEUE_FULL)
         {
             ContextPtr->PendingEventId = CFE_SB_Q_FULL_ERR_EID;
+            TxnPtr->Status = -1;
             CFE_SB_Global.HKTlmMsg.Payload.PipeOverflowErrorCounter++;
         }
         else

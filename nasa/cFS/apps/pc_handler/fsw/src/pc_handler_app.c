@@ -99,12 +99,15 @@ void FILE_TRANSFER_SERVER_ProcessRequestFileCmd(CFE_SB_Buffer_t *SBBufPtr)
 {
     const CPU_TEMP_request_t *CmdPtr = (const CPU_TEMP_request_t *) SBBufPtr;
 
+    
+
     /* For demonstration, just log an event: which file is requested? */
     // CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION,
     //                   "FileTransferServer: Received request for file '%s'", CmdPtr->device_path);
 
     /* Send the requested file to the requesting client(s) */
-    FILE_TRANSFER_SERVER_SendFile(CmdPtr->device_path, CmdPtr->sender_mid, CmdPtr->last);
+    PC_HANDLER_AppData.chunkSize = CmdPtr->packetSize;
+    FILE_TRANSFER_SERVER_SendFile(CmdPtr->device_path, CmdPtr->sender_mid);
 } /* End FILE_TRANSFER_SERVER_ProcessRequestFileCmd */
 
 
@@ -118,7 +121,7 @@ void FILE_TRANSFER_SERVER_ProcessRequestFileCmd(CFE_SB_Buffer_t *SBBufPtr)
 **   subscription).
 **
 *******************************************************************************/
-void FILE_TRANSFER_SERVER_SendFile(const char *filename, int32 message_id, int last)
+void FILE_TRANSFER_SERVER_SendFile(const char *filename, int32 message_id)
 {
     PC_HANDLER_response_t response;
     /* Initialize the TLM message header for our chunk message */
@@ -136,41 +139,46 @@ void FILE_TRANSFER_SERVER_SendFile(const char *filename, int32 message_id, int l
 
     /* Read the file in chunks until EOF or an error occurs */
     size_t bytesRead = 0;
-    // do {
-    /* Clear the chunk data each loop */
-    response.Flags    = 0;  /* clear EOF flag initially */
-    response.ChunkSize = 0;
+    do {
+        /* Clear the chunk data each loop */
+        response.Flags    = 0;  /* clear EOF flag initially */
+        response.ChunkSize = 0;
 
-    /* Read up to FILE_TRANSFER_MAX_CHUNK_SIZE bytes */
-    bytesRead = fread(response.Data, 1, FILE_TRANSFER_MAX_CHUNK_SIZE, fp);
-    response.ChunkSize = (uint32)bytesRead;
+        /* Read up to FILE_TRANSFER_MAX_CHUNK_SIZE bytes */
+        bytesRead = fread(response.Data, 1, PC_HANDLER_AppData.chunkSize, fp);
+        response.ChunkSize = (uint32)bytesRead;
 
-    if (bytesRead > 0)
-    {
-        /* Publish the chunk to the software bus */
-        if (last == 1) {
-            response.Flags    = FILE_TRANSFER_FLAG_EOF;
-            CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION,
-                      "FileTransferServer: Last Packet for '%s'.", filename);
-        }
-        
-        int status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
-        printf("Sending response to MID 0x%4X\n", message_id);
-        if (status != CFE_SUCCESS)
+        if (bytesRead > 0)
         {
-            CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_ERROR,
-                                "FileTransferServer: SB transmit chunk failed, status=0x%08X", status);
-            fclose(fp);
-            return;
+            /* Publish the chunk to the software bus */
+            // if (last == 1) {
+            //     CFE_EVS_SendEvent(PC_HANDLER_EID, CFE_EVS_EventType_INFORMATION,
+            //             "FileTransferServer: Last Packet for '%s'.", filename);
+            // }
+            // Check if the Queue is full here: pipe SBN_2_66_Pipe
+            int status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
+            // printf("Sending response to MID 0x%4X\n", message_id);
+            if (status != CFE_SUCCESS)
+            {
+                printf("FileTransferServer: SB transmit chunk failed, status=0x%08X\n", status);
+                fclose(fp);
+                return;
+            }
+            // while (status != CFE_SUCCESS)
+            // {
+            //     printf("PIPE_OVERFLOW_ERROR\n");
+            //     status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
+            // }
         }
-    }
 
-    // } while (bytesRead == FILE_TRANSFER_MAX_CHUNK_SIZE);
+    } while (bytesRead == PC_HANDLER_AppData.chunkSize);
 
     // /* We reached EOF or a partial read. Now send a final chunk with EOF flag set. */
-    // response.Flags    = FILE_TRANSFER_FLAG_EOF;
-    // response.ChunkSize = 0;
+    response.Flags    = FILE_TRANSFER_FLAG_EOF;
+    response.ChunkSize = 0;
     memset(response.Data, 0, sizeof(response.Data));
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&response, true);
+    printf("Finished sending packets for request\n");
 
     /* Close the file */
     fclose(fp);

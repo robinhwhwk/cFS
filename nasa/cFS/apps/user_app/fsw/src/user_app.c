@@ -139,13 +139,13 @@ void FILE_TRANSFER_CLIENT_ProcessPacket(CFE_SB_Buffer_t *SBBufPtr)
     switch (FcnCode)
     {
         case USER_APP_M0_CC:
-            iterations = 10;
+            iterations = 1;
             break;
         case USER_APP_M1_CC:
-            iterations = 100;
+            iterations = 10;
             break;
         case USER_APP_M2_CC:
-            iterations = 500;
+            iterations = 100;
             break;
         case USER_APP_M3_CC:
             iterations = 1000;
@@ -185,7 +185,7 @@ void FILE_TRANSFER_CLIENT_ProcessPacket(CFE_SB_Buffer_t *SBBufPtr)
 *******************************************************************************/
 void FILE_TRANSFER_CLIENT_ProcessResponse(CFE_SB_Buffer_t *SBBufPtr)
 {
-    // const PC_HANDLER_response_t *ChunkPtr = (const PC_HANDLER_response_t *) SBBufPtr;
+    const PC_HANDLER_response_t *ChunkPtr = (const PC_HANDLER_response_t *) SBBufPtr;
 
     /* If first chunk, open/clear local file. If subsequent chunk, append. */
     /* For simplicity, we open in append mode every time. Real code would do more checks. */
@@ -194,22 +194,22 @@ void FILE_TRANSFER_CLIENT_ProcessResponse(CFE_SB_Buffer_t *SBBufPtr)
     success_count += 1;
 
     /* Check if this chunk has the EOF flag set */
-    // if (ChunkPtr->Flags & FILE_TRANSFER_FLAG_EOF)
-    // {
+    if (ChunkPtr->Flags & FILE_TRANSFER_FLAG_EOF)
+    {
         // CFE_EVS_SendEvent(USER_EID, CFE_EVS_EventType_INFORMATION,
         //                   "FileTransferClient: Received EOF for file. Transfer complete.");
         /* Maybe do some final handling: rename file, validate size, etc. */
         // Record end time
-    clock_gettime(CLOCK_MONOTONIC, &end);
+        clock_gettime(CLOCK_MONOTONIC, &end);
 
-    // Calculate latency in microseconds
-    latency = (end.tv_sec - start.tv_sec) * 1e6 + 
-            (end.tv_nsec - start.tv_nsec) / 1e3;
+        // Calculate latency in microseconds
+        latency = (end.tv_sec - start.tv_sec) * 1e6 + 
+                (end.tv_nsec - start.tv_nsec) / 1e3;
 
-    // Print the CPU temperature and latency
-    printf("Success Count: %d\n", success_count);
-    printf("Latency: %.2f us, Operations per second: %.2f\n", latency, success_count / latency * 100000);
-    // }
+        // Print the CPU temperature and latency
+        printf("Success Count: %d\n", success_count);
+        printf("Latency: %.2f us, Operations per second: %.2f\n", latency, success_count / latency * 100000);
+    }
 } /* End of FILE_TRANSFER_CLIENT_ProcessChunkMsg() */
 
 void FILE_TRANSFER_CLIENT_ProcessGroundCommand(CFE_SB_Buffer_t *SBBufPtr, int iterations) {

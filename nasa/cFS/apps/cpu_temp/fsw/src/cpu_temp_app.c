@@ -134,25 +134,9 @@ void FILE_TRANSFER_CLIENT_ProcessPacket(CFE_SB_Buffer_t *SBBufPtr)
     CFE_MSG_FcnCode_t FcnCode = 0;
 
     CFE_MSG_GetFcnCode(&SBBufPtr->Msg, &FcnCode);
-    int iterations = 0;
-
-    switch (FcnCode)
-    {
-        case CPU_TEMP_APP_M0_CC:
-            iterations = 10;
-            break;
-        case CPU_TEMP_APP_M1_CC:
-            iterations = 100;
-            break;
-        case CPU_TEMP_APP_M2_CC:
-            iterations = 500;
-            break;
-        case CPU_TEMP_APP_M3_CC:
-            iterations = 1000;
-            break;
-        default:
-            break;
-    }
+    int iterations = 1;
+    CPU_TEMP_AppData.chunkSize = 1024;
+    CPU_TEMP_AppData.chunkSize *= FcnCode;
 
     switch (MsgId.Value)
     {
@@ -185,7 +169,7 @@ void FILE_TRANSFER_CLIENT_ProcessPacket(CFE_SB_Buffer_t *SBBufPtr)
 *******************************************************************************/
 void FILE_TRANSFER_CLIENT_ProcessResponse(CFE_SB_Buffer_t *SBBufPtr)
 {
-    // const PC_HANDLER_response_t *ChunkPtr = (const PC_HANDLER_response_t *) SBBufPtr;
+    const PC_HANDLER_response_t *ChunkPtr = (const PC_HANDLER_response_t *) SBBufPtr;
 
     /* If first chunk, open/clear local file. If subsequent chunk, append. */
     /* For simplicity, we open in append mode every time. Real code would do more checks. */
@@ -194,22 +178,22 @@ void FILE_TRANSFER_CLIENT_ProcessResponse(CFE_SB_Buffer_t *SBBufPtr)
     success_count += 1;
 
     /* Check if this chunk has the EOF flag set */
-    // if (ChunkPtr->Flags & FILE_TRANSFER_FLAG_EOF)
-    // {
-        // CFE_EVS_SendEvent(CPU_TEMP_EID, CFE_EVS_EventType_INFORMATION,
-        //                   "FileTransferClient: Received EOF for file. Transfer complete.");
-        /* Maybe do some final handling: rename file, validate size, etc. */
-        // Record end time
-    clock_gettime(CLOCK_MONOTONIC, &end);
+    if (ChunkPtr->Flags & FILE_TRANSFER_FLAG_EOF)
+    {
+            // CFE_EVS_SendEvent(CPU_TEMP_EID, CFE_EVS_EventType_INFORMATION,
+            //                   "FileTransferClient: Received EOF for file. Transfer complete.");
+            /* Maybe do some final handling: rename file, validate size, etc. */
+            // Record end time
+        clock_gettime(CLOCK_MONOTONIC, &end);
 
-    // Calculate latency in microseconds
-    latency = (end.tv_sec - start.tv_sec) * 1e6 + 
-            (end.tv_nsec - start.tv_nsec) / 1e3;
+        // Calculate latency in microseconds
+        latency = (end.tv_sec - start.tv_sec) * 1e6 + 
+                (end.tv_nsec - start.tv_nsec) / 1e3;
 
-    // Print the CPU temperature and latency
-    printf("Success Count: %d\n", success_count);
-    printf("Latency: %.2f us, Operations per second: %.2f\n", latency, success_count / latency * 100000);
-    // }
+        // Print the CPU temperature and latency
+        printf("Success Count: %d\n", success_count);
+        printf("Latency: %.2f us, Operations per second: %.2f\n", latency, success_count / latency * 100000);
+    }
 }
 
 void FILE_TRANSFER_CLIENT_ProcessGroundCommand(CFE_SB_Buffer_t *SBBufPtr, int iterations) {
@@ -253,7 +237,8 @@ int32 FILE_TRANSFER_CLIENT_RequestFile(const char *filename, int last)
     strncpy(request.device_path, filename, sizeof(request.device_path) - 1);
     request.device_path[sizeof(request.device_path) - 1] = '\0';  /* ensure null-termination */
     // printf("device path: %s\n", request.device_path);
-    request.last = last;
+    request.packetSize = CPU_TEMP_AppData.chunkSize;
+
     request.sender_mid = CPU_TEMP_SENDER_MID;
 
     /* Send message to software bus – SBN will forward it to the server node */
