@@ -1,0 +1,48 @@
+#---------------------------------------------------------------------------
+# Sample doxygen setup for generating mission documentation
+#---------------------------------------------------------------------------
+
+# Allow overrides
+@INCLUDE_PATH          = /home/hkim3019/cFS/server/cFS
+
+# Common configuration and default settings
+@INCLUDE               = /home/hkim3019/cFS/server/cFS/build/docs/cfe-common.doxyfile
+
+# Example mission doc design setup
+PROJECT_NAME           = "SampleMission"
+PROJECT_BRIEF          = "Core Flight System project built using \"sample\" configuration"
+OUTPUT_DIRECTORY       = /home/hkim3019/cFS/server/cFS/build/docs/mission-doc
+WARN_LOGFILE           = mission-doc-warnings.log
+
+# Include mission defs directory
+INPUT                 += /home/hkim3019/cFS/server/cFS/sample_defs
+STRIP_FROM_PATH       += /home/hkim3019/cFS/server/cFS/sample_defs
+
+# The user content doxyfile contains paths to the mission-specific applications
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/core_api
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/core_private
+INPUT += /home/hkim3019/cFS/server/cFS/apps/pc_handler
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/cfe_assert
+INPUT += /home/hkim3019/cFS/server/cFS/apps/sbn
+INPUT += /home/hkim3019/cFS/server/cFS/apps/sbn_udp
+INPUT += /home/hkim3019/cFS/server/cFS/apps/sbn_f_remap
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/es
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/evs
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/fs
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/sb
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/tbl
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/time
+@INCLUDE = /home/hkim3019/cFS/server/cFS/build/docs/osal-detaildesign.doxyfile
+INPUT += /home/hkim3019/cFS/server/cFS/psp
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/msg
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/sbr
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/resourceid
+INPUT += /home/hkim3019/cFS/server/cFS/cfe/modules/config
+
+@INCLUDE = /home/hkim3019/cFS/server/cFS/build/docs/tgtsystem-content-native_default_cpu1.doxyfile
+
+
+# Exclude coverage tests, stubs and associated framework from the documentation
+EXCLUDE_PATTERNS       += "*/ut-stubs/*"
+EXCLUDE_PATTERNS       += "*/ut-coverage/*"
+EXCLUDE_PATTERNS       += "*/unit-test*/*"

@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g -shared  -o sbn_udp.so CMakeFiles/sbn_udp.dir/fsw/src/sbn_udp_if.c.o 

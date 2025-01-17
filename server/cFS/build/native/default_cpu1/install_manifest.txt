@@ -1,0 +1,7 @@
+/exe/cpu1/cf/cfe_es_startup.scr
+/exe/cpu1/cf/pc_handler_app.so
+/exe/cpu1/cf/cfe_assert.so
+/exe/cpu1/cf/sbn.so
+/exe/cpu1/cf/sbn_udp.so
+/exe/cpu1/cf/sbn_f_remap.so
+/exe/cpu1/core-cpu1

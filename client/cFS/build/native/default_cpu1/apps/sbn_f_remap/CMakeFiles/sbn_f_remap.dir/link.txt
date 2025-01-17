@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g -shared  -o sbn_f_remap.so CMakeFiles/sbn_f_remap.dir/fsw/src/sbn_f_remap.c.o 

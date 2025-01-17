@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g -shared  -o pc_handler_app.so CMakeFiles/pc_handler_app.dir/fsw/src/pc_handler_app.c.o 

@@ -1,0 +1,10 @@
+#ifndef CPU_TEMP_APP_MSGIDS_H
+#define CPU_TEMP_APP_MSGIDS_H
+
+#define CPU_TEMP_CMD_MID       0x1d82
+#define CPU_TEMP_READ_LOCAL_MID       0x1d83
+#define CPU_TEMP_REQUEST_MID       0x1d84
+#define CPU_TEMP_SENDER_MID       0x1d85
+#define CPU_TEMP_TLM_REMAP_MID 0x0d82
+
+#endif

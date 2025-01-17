@@ -1,0 +1,13 @@
+#ifndef PC_HANDLER_APP_MSGIDS_H
+#define PC_HANDLER_APP_MSGIDS_H
+
+#define PC_HANDLER_CMD_MID       0x1e82
+#define PC_HANDLER_TLM_REMAP_MID 0x0e82
+
+#define CLIENT_REQUEST_MID       0x1d84
+#define CLIENT_TLM_MID       0x0d82
+#define CLIENT_TLM_REMAP_MID 0x0d82
+
+#define USER_REQUEST_MID        0x1f84
+
+#endif

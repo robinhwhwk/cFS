@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g -shared  -o cpu_temp_app.so CMakeFiles/cpu_temp_app.dir/fsw/src/cpu_temp_app.c.o 

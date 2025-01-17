@@ -1,0 +1,5 @@
+/exe/host/cmdUtil
+/exe/./cpu1/cf/sbn_remap_tbl.tbl
+/exe/./cpu1/cf/sbn_conf_tbl.tbl
+/exe/host/elf2cfetbl
+/exe/host/cfe_ts_crc
