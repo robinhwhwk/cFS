@@ -28,7 +28,7 @@ node2.hardware_type = "m400"
 link1 = request.Link(members = [node1,node2])
 
 # Install and execute a script that is contained in the repository.
-node.addService(pg.Execute(shell="sh", command="/local/repository/silly.sh"))
+node.addService(pg.Execute(shell="sh", command="/local/repository/setup.sh"))
 
 # Print the RSpec to the enclosing page.
 pc.printRequestRSpec(request)
