@@ -1,3 +1,4 @@
+#!/bin/bash
 git clone https://github.com/robinhwhwk/cFS.git
 sudo apt-get update
 sudo apt install docker.io
